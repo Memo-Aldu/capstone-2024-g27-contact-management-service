@@ -19,13 +19,23 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
     Optional<ContactEntity> findContactEntityById(@Param("id") UUID id);
 
     @Query(value = "SELECT * FROM contact_service_db.contact", nativeQuery = true)
-    Set<ContactEntity> findAllContactEntities();
+    Set<ContactEntity> findAllContactFromUserEntities();
 
     @Query(value = "SELECT * FROM contact_service_db.contact c WHERE c.email = :email", nativeQuery = true)
     Optional<ContactEntity> findContactEntityByEmail(@Param("email") String email);
 
     @Query(value = "SELECT * FROM contact_service_db.contact c WHERE c.phone = :phone", nativeQuery = true)
     Optional<ContactEntity> findContactEntityByPhone(@Param("phone") String phone);
+
+
+    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE LOWER(c.firstName) LIKE LOWER(:firstName)", nativeQuery = true)
+    Set<ContactEntity> searchByFirstName(@Param("firstName") String firstName);
+
+    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE LOWER(c.lastName) LIKE LOWER(:lastName)", nativeQuery = true)
+    Set<ContactEntity> searchByLastName(@Param("lastName") String lastName);
+
+    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE LOWER(c.preferredName) LIKE LOWER(:preferredName)", nativeQuery = true)
+    Set<ContactEntity> searchByPreferredName(@Param("preferredName") String preferredName);
 
     @Transactional
     @Modifying

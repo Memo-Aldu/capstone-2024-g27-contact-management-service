@@ -1,4 +1,4 @@
-package com.crm.contactmanagementservice.contacts.mappers;
+package com.crm.contactmanagementservice.contacts.mapper;
 
 import com.crm.contactmanagementservice.contacts.dto.ContactDTO;
 import com.crm.contactmanagementservice.contacts.entity.ContactEntity;
