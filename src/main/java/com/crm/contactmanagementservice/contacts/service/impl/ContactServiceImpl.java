@@ -1,5 +1,6 @@
-package com.crm.contactmanagementservice.contacts.service;
+package com.crm.contactmanagementservice.contacts.service.impl;
 
+import com.crm.contactmanagementservice.contacts.service.ContactService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.crm.contactmanagementservice.contacts.dto.ContactDTO;
@@ -45,7 +46,15 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public Set<ContactDTO> getAllContacts() {
         log.info("Fetching all contacts");
-        return contactRepository.findAllContactFromUserEntities().stream()
+        return contactRepository.findAllContactEntities().stream()
+                .map(contactMapper::toDTO)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<ContactDTO> getAllContactsByContactListId(Long contactListId) {
+        log.info("Fetching all contacts by contact list ID: {}", contactListId);
+        return contactRepository.findAllContactsByContactListId(contactListId).stream()
                 .map(contactMapper::toDTO)
                 .collect(Collectors.toSet());
     }

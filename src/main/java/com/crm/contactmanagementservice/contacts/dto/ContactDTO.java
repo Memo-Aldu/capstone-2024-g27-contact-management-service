@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public record ContactDTO(
         java.util.UUID id,
+        java.util.UUID contactListId,
         String firstName,
         String lastName,
         String preferredName,
@@ -17,6 +18,6 @@ public record ContactDTO(
         boolean doNotContact) {
     @JsonIgnore
     public boolean isValidDto() {
-        return email != null || phone != null || firstName != null || lastName != null || fax != null || addressId != null || id != null;
+        return contactListId != null || email != null || phone != null || firstName != null || lastName != null || fax != null || addressId != null || id != null;
     }
 }

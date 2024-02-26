@@ -7,9 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
-/**
- * Mapper for the entity Contact and its DTO ContactDTO.
- */
 @Component
 @Mapper(componentModel = "spring")
 public interface ContactMapper {

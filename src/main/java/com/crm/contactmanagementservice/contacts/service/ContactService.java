@@ -15,6 +15,8 @@ public interface ContactService {
 
     Set<ContactDTO> getAllContacts();
 
+    Set<ContactDTO> getAllContactsByContactListId(Long contactListId);
+
     ContactDTO createContact(ContactDTO contactDTO);
 
     ContactDTO updateContact(ContactDTO contactDTO, UUID id);

@@ -13,7 +13,7 @@ public class ContactEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id", unique = true)
     private UUID id;
 
     @Column(name = "contact_first_name")
@@ -25,7 +25,7 @@ public class ContactEntity {
     @Column(name = "contact_preferred_name")
     private String preferredName;
 
-    @Column(name = "contact_email")
+    @Column(name = "contact_email", unique = true)
     private String email;
 
     @Column(name = "contact_phone")
@@ -37,6 +37,11 @@ public class ContactEntity {
     @Column(name = "address_id")
     private UUID addressId;
 
-    @Column(name = "do_not_contact", nullable = false)
+    @Column(name = "do_not_contact")
     private boolean doNotContact;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contact_list_id", referencedColumnName = "id")
+    private ContactListEntity contactList;
 }
+
