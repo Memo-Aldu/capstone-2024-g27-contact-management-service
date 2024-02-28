@@ -1,4 +1,4 @@
-package com.crm.contactmanagementservice.contacts.dto;
+package com.crm.contactmanagementservice.dto;
 
 /**
  * DTO for ContactLists information.

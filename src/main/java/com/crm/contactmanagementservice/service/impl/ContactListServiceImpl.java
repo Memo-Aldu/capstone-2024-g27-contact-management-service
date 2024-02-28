@@ -1,10 +1,10 @@
-package com.crm.contactmanagementservice.contacts.service.impl;
+package com.crm.contactmanagementservice.service.impl;
 
-import com.crm.contactmanagementservice.contacts.dto.ContactListDTO;
-import com.crm.contactmanagementservice.contacts.mapper.ContactListMapper;
-import com.crm.contactmanagementservice.contacts.repository.ContactListRepository;
-import com.crm.contactmanagementservice.contacts.service.ContactListService;
-import com.crm.contactmanagementservice.contacts.entity.ContactListEntity;
+import com.crm.contactmanagementservice.service.ContactListService;
+import com.crm.contactmanagementservice.dto.ContactListDTO;
+import com.crm.contactmanagementservice.mapper.ContactListMapper;
+import com.crm.contactmanagementservice.repository.ContactListRepository;
+import com.crm.contactmanagementservice.entity.ContactListEntity;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

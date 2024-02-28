@@ -1,10 +1,7 @@
-package com.crm.contactmanagementservice.contacts.dto;
+package com.crm.contactmanagementservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-/**
- * DTO for Contact information.
- */
 public record ContactDTO(
         java.util.UUID id,
         java.util.UUID contactListId,

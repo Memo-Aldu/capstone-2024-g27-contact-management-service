@@ -1,7 +1,7 @@
-package com.crm.contactmanagementservice.contacts.mapper;
+package com.crm.contactmanagementservice.mapper;
 
-import com.crm.contactmanagementservice.contacts.dto.ContactDTO;
-import com.crm.contactmanagementservice.contacts.entity.ContactEntity;
+import com.crm.contactmanagementservice.dto.ContactDTO;
+import com.crm.contactmanagementservice.entity.ContactEntity;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 

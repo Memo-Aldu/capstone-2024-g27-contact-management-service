@@ -1,4 +1,4 @@
-package com.crm.contactmanagementservice.contacts.exceptions;
+package com.crm.contactmanagementservice.exceptions;
 
 import java.io.Serial;
 

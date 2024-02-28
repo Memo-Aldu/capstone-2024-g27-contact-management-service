@@ -1,4 +1,4 @@
-package com.crm.contactmanagementservice.contacts.entity;
+package com.crm.contactmanagementservice.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ContactListEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", unique = true)
     private UUID id;
 

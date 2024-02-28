@@ -1,13 +1,13 @@
-package com.crm.contactmanagementservice.contacts.service.impl;
+package com.crm.contactmanagementservice.service.impl;
 
-import com.crm.contactmanagementservice.contacts.service.ContactService;
+import com.crm.contactmanagementservice.service.ContactService;
+import com.crm.contactmanagementservice.dto.ContactDTO;
+import com.crm.contactmanagementservice.entity.ContactEntity;
+import com.crm.contactmanagementservice.exceptions.AppEntityNotFoundException;
+import com.crm.contactmanagementservice.repository.ContactRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.crm.contactmanagementservice.contacts.dto.ContactDTO;
-import com.crm.contactmanagementservice.contacts.entity.ContactEntity;
-import com.crm.contactmanagementservice.contacts.exceptions.AppEntityNotFoundException;
-import com.crm.contactmanagementservice.contacts.mapper.ContactMapper;
-import com.crm.contactmanagementservice.contacts.repository.ContactRepository;
+import com.crm.contactmanagementservice.mapper.ContactMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -20,8 +20,7 @@ import java.util.stream.Collectors;
 public class ContactServiceImpl implements ContactService {
 
     private final ContactRepository contactRepository;
-    private final ContactMapper contactMapper; // Assume this mapper exists for converting entities to DTOs and vice versa
-
+    private final ContactMapper contactMapper;
     @Override
     public ContactDTO getContactById(UUID id) {
         log.info("Fetching contact by id: {}", id);
@@ -62,7 +61,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactDTO createContact(ContactDTO contactDTO) {
         log.info("Creating new contact");
-        ContactEntity contactEntity = contactMapper.toEntity(contactDTO); // Assume this method exists
+        ContactEntity contactEntity = contactMapper.toEntity(contactDTO);
         return contactMapper.toDTO(contactRepository.save(contactEntity));
     }
     @Override
@@ -95,6 +94,7 @@ public class ContactServiceImpl implements ContactService {
         return contactMapper.toDTO(contactRepository.save(contactEntity));
     }
 
+
     @Override
     public void deleteContactById(UUID id) {
         log.info("Deleting contact by id: {}", id);
@@ -108,25 +108,9 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Set<ContactDTO> searchContactsByFirstName(String firstName) {
-        log.info("Searching contacts by first name containing: {}", firstName);
-        return contactRepository.searchByFirstName("%" + firstName + "%").stream()
-                .map(contactMapper::toDTO)
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    public Set<ContactDTO> searchContactsByLastName(String lastName) {
-        log.info("Searching contacts by last name containing: {}", lastName);
-        return contactRepository.searchByLastName("%" + lastName + "%").stream()
-                .map(contactMapper::toDTO)
-                .collect(Collectors.toSet());
-    }
-
-    @Override
-    public Set<ContactDTO> getContactsByPreferredName(String preferredName) {
-        log.info("Searching contacts by preferred name containing: {}", preferredName);
-        return contactRepository.searchByPreferredName("%" + preferredName + "%").stream()
+    public Set<ContactDTO> searchContactsByName(String name) {
+        log.info("Searching contacts by first name, last name or preferred containing: {}", name);
+        return contactRepository.searchByName("%" + name + "%").stream()
                 .map(contactMapper::toDTO)
                 .collect(Collectors.toSet());
     }

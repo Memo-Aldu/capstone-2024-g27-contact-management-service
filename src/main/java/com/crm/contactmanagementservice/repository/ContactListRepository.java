@@ -1,6 +1,6 @@
-package com.crm.contactmanagementservice.contacts.repository;
+package com.crm.contactmanagementservice.repository;
 
-import com.crm.contactmanagementservice.contacts.entity.ContactListEntity;
+import com.crm.contactmanagementservice.entity.ContactListEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

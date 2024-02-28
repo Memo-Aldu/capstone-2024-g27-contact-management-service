@@ -1,7 +1,8 @@
-package com.crm.contactmanagementservice.contacts.service;
+package com.crm.contactmanagementservice.service;
 
 
-import com.crm.contactmanagementservice.contacts.dto.ContactDTO;
+import com.crm.contactmanagementservice.dto.ContactDTO;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,9 +25,5 @@ public interface ContactService {
     void deleteContactById(UUID id);
     boolean checkContactDoNotContactFlag(UUID id);
 
-    Set<ContactDTO> searchContactsByFirstName(String firstName);
-
-    Set<ContactDTO> searchContactsByLastName(String lastName);
-
-    Set<ContactDTO> getContactsByPreferredName(String preferredName);
+    Set<ContactDTO> searchContactsByName(String name);
 }

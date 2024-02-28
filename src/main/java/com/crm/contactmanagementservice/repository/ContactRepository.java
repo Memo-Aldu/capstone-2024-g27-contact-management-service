@@ -1,6 +1,6 @@
-package com.crm.contactmanagementservice.contacts.repository;
+package com.crm.contactmanagementservice.repository;
 
-import com.crm.contactmanagementservice.contacts.entity.ContactEntity;
+import com.crm.contactmanagementservice.entity.ContactEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,7 +21,7 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
     @Query(value = "SELECT * FROM contact_service_db.contact", nativeQuery = true)
     Set<ContactEntity> findAllContactEntities();
 
-    @Query(value = "SELECT * FROM contacts WHERE contact_list_id = :contactListId", nativeQuery = true)
+    @Query(value = "SELECT * FROM contact_service_db.contact WHERE contact_list_id = :contactListId", nativeQuery = true)
     Set<ContactEntity> findAllContactsByContactListId(@Param("contactListId") Long contactListId);
 
 
@@ -31,15 +31,8 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
     @Query(value = "SELECT * FROM contact_service_db.contact c WHERE c.phone = :phone", nativeQuery = true)
     Optional<ContactEntity> findContactEntityByPhone(@Param("phone") String phone);
 
-
-    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE LOWER(c.firstName) LIKE LOWER(:firstName)", nativeQuery = true)
-    Set<ContactEntity> searchByFirstName(@Param("firstName") String firstName);
-
-    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE LOWER(c.lastName) LIKE LOWER(:lastName)", nativeQuery = true)
-    Set<ContactEntity> searchByLastName(@Param("lastName") String lastName);
-
-    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE LOWER(c.preferredName) LIKE LOWER(:preferredName)", nativeQuery = true)
-    Set<ContactEntity> searchByPreferredName(@Param("preferredName") String preferredName);
+    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE LOWER(c.firstName) LIKE LOWER(:name) OR LOWER(c.lastName) LIKE LOWER(:name) OR LOWER(c.preferredName) LIKE LOWER(:name)", nativeQuery = true)
+    Set<ContactEntity> searchByName(@Param("name") String name);
 
     @Transactional
     @Modifying

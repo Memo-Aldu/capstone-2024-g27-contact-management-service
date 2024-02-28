@@ -1,6 +1,7 @@
-package com.crm.contactmanagementservice.contacts.service;
+package com.crm.contactmanagementservice.service;
 
-import com.crm.contactmanagementservice.contacts.dto.ContactListDTO;
+import com.crm.contactmanagementservice.dto.ContactListDTO;
+
 import java.util.Set;
 import java.util.UUID;
 
