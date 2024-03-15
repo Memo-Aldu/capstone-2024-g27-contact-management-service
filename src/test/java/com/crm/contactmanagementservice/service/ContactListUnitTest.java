@@ -48,7 +48,7 @@ public class ContactListUnitTest {
     @DisplayName("JUnit test for getContactListById method")
     @Test
     public void givenContactListId_whenGetContactListById_thenReturnContactListObject() {
-        given(contactListRepository.findById(contactListEntity.getId())).willReturn(Optional.of(contactListEntity));
+        given(contactListRepository.findContactListEntityById(contactListEntity.getId())).willReturn(Optional.of(contactListEntity));
         given(contactListMapper.toDTO(contactListEntity)).willReturn(contactListDTO);
         ContactListDTO foundContactList = contactListService.getContactListById(contactListEntity.getId());
         assertThat(foundContactList).isNotNull();
@@ -59,7 +59,7 @@ public class ContactListUnitTest {
     @Test
     public void givenNonExistentContactListId_whenGetContactListById_thenThrowException() {
         UUID nonExistentId = UUID.randomUUID();
-        given(contactListRepository.findById(nonExistentId)).willReturn(Optional.empty());
+        given(contactListRepository.findContactListEntityById(nonExistentId)).willReturn(Optional.empty());
         assertThrows(RuntimeException.class, () -> contactListService.getContactListById(nonExistentId));
     }
 

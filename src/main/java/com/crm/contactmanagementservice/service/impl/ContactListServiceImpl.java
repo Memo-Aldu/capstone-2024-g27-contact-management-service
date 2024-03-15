@@ -24,7 +24,7 @@ public class ContactListServiceImpl implements ContactListService {
     @Override
     public ContactListDTO getContactListById(UUID id) {
         log.info("Fetching contact list by id: {}", id);
-        return contactListMapper.toDTO(contactListRepository.findById(id)
+        return contactListMapper.toDTO(contactListRepository.findContactListEntityById(id)
                 .orElseThrow(() -> new RuntimeException("ContactList not found"))); // Customize exception as needed
     }
 

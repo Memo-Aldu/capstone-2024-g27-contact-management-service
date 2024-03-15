@@ -1,7 +1,6 @@
 
 FROM maven:3.8.1 AS build
 
-# Add Maintainer Info
 LABEL authors="senoussial"
 
 LABEL MAINTAINER="senoussi08@gmail.com"

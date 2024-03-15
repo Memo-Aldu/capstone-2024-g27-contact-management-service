@@ -25,13 +25,13 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
     Set<ContactEntity> findAllContactsByContactListId(@Param("contactListId") Long contactListId);
 
 
-    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE c.email = :email", nativeQuery = true)
+    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE c.contact_email = :email", nativeQuery = true)
     Optional<ContactEntity> findContactEntityByEmail(@Param("email") String email);
 
-    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE c.phone = :phone", nativeQuery = true)
+    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE c.contact_phone = :phone", nativeQuery = true)
     Optional<ContactEntity> findContactEntityByPhone(@Param("phone") String phone);
 
-    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE LOWER(c.firstName) LIKE LOWER(:name) OR LOWER(c.lastName) LIKE LOWER(:name) OR LOWER(c.preferredName) LIKE LOWER(:name)", nativeQuery = true)
+    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE LOWER(c.contact_first_Name) LIKE LOWER(:name) OR LOWER(c.contact_last_name) LIKE LOWER(:name) OR LOWER(c.contact_preferred_name) LIKE LOWER(:name)", nativeQuery = true)
     Set<ContactEntity> searchByName(@Param("name") String name);
 
     @Transactional
@@ -39,9 +39,9 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
     @Query(value = "DELETE FROM contact_service_db.contact c WHERE c.id = :id", nativeQuery = true)
     void deleteContactEntityById(@Param("id") UUID id);
 
-    @Query(value = "SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM contact_service_db.contact c WHERE c.email = :email", nativeQuery = true)
+    @Query(value = "SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM contact_service_db.contact c WHERE c.contact_email = :email", nativeQuery = true)
     boolean existsContactEntityByEmail(@Param("email") String email);
 
-    @Query(value = "SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM contact_service_db.contact c WHERE c.phone = :phone", nativeQuery = true)
+    @Query(value = "SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM contact_service_db.contact c WHERE c.contact_phone = :phone", nativeQuery = true)
     boolean existsContactEntityByPhone(@Param("phone") String phone);
 }

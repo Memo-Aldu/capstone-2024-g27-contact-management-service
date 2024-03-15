@@ -12,9 +12,9 @@ import java.util.UUID;
 @Repository
 public interface ContactListRepository extends JpaRepository<ContactListEntity, UUID> {
 
-    @Query(value = "SELECT * FROM contact_list WHERE id = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM contact_service_db.contact_list WHERE id = :id", nativeQuery = true)
     Optional<ContactListEntity> findContactListEntityById(@Param("id") UUID id);
 
-    @Query(value = "SELECT * FROM contact_list WHERE user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT * FROM contact_service_db.contact_list WHERE user_id = :userId", nativeQuery = true)
     Set<ContactListEntity> findAllContactListsByUserId(@Param("userId") UUID userId);
 }
