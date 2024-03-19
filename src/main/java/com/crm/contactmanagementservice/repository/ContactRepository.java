@@ -22,7 +22,7 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
     Set<ContactEntity> findAllContactEntities();
 
     @Query(value = "SELECT * FROM contact_service_db.contact WHERE contact_list_id = :contactListId", nativeQuery = true)
-    Set<ContactEntity> findAllContactsByContactListId(@Param("contactListId") Long contactListId);
+    Set<ContactEntity> findAllContactsByContactListId(@Param("contactListId") UUID contactListId);
 
 
     @Query(value = "SELECT * FROM contact_service_db.contact c WHERE c.contact_email = :email", nativeQuery = true)
@@ -39,9 +39,4 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
     @Query(value = "DELETE FROM contact_service_db.contact c WHERE c.id = :id", nativeQuery = true)
     void deleteContactEntityById(@Param("id") UUID id);
 
-    @Query(value = "SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM contact_service_db.contact c WHERE c.contact_email = :email", nativeQuery = true)
-    boolean existsContactEntityByEmail(@Param("email") String email);
-
-    @Query(value = "SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM contact_service_db.contact c WHERE c.contact_phone = :phone", nativeQuery = true)
-    boolean existsContactEntityByPhone(@Param("phone") String phone);
 }

@@ -51,7 +51,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Set<ContactDTO> getAllContactsByContactListId(Long contactListId) {
+    public Set<ContactDTO> getAllContactsByContactListId(UUID contactListId) {
         log.info("Fetching all contacts by contact list ID: {}", contactListId);
         return contactRepository.findAllContactsByContactListId(contactListId).stream()
                 .map(contactMapper::toDTO)
@@ -99,12 +99,6 @@ public class ContactServiceImpl implements ContactService {
     public void deleteContactById(UUID id) {
         log.info("Deleting contact by id: {}", id);
         contactRepository.deleteContactEntityById(id);
-    }
-    @Override
-    public boolean checkContactDoNotContactFlag(UUID id) {
-        ContactEntity contact = contactRepository.findContactEntityById(id)
-                .orElseThrow(() -> new AppEntityNotFoundException("Contact not found"));
-        return contact.isDoNotContact();
     }
 
     @Override

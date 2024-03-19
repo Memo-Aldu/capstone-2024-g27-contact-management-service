@@ -1,13 +1,11 @@
-
-FROM maven:3.8.1 AS build
-
+FROM maven:latest AS build
 LABEL authors="senoussial"
-
-LABEL MAINTAINER="senoussi08@gmail.com"
-
 WORKDIR /app
-
+ARG CONTAINER_PORT
+COPY pom.xml /app
+RUN mvn dependency:resolve
 COPY . /app
+RUN mvn clean
 
 RUN mvn clean package -DskipTests
 

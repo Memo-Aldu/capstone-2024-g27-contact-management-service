@@ -16,14 +16,13 @@ public interface ContactService {
 
     Set<ContactDTO> getAllContacts();
 
-    Set<ContactDTO> getAllContactsByContactListId(Long contactListId);
+    Set<ContactDTO> getAllContactsByContactListId(UUID contactListId);
 
     ContactDTO createContact(ContactDTO contactDTO);
 
     ContactDTO updateContact(ContactDTO contactDTO, UUID id);
 
     void deleteContactById(UUID id);
-    boolean checkContactDoNotContactFlag(UUID id);
 
     Set<ContactDTO> searchContactsByName(String name);
 }
