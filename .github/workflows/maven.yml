@@ -2,9 +2,9 @@ name: Java CI/CD with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches: [ Contact-workflow ]
   pull_request:
-    branches: [ main ]
+    branches: [ Contact-workflow ]
 
 jobs:
   build-and-deploy:
@@ -20,6 +20,9 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn clean test install
+      env:
+        TEST_ACCOUNT_SID: ${{ secrets.TEST_ACCOUNT_SID }}
+        TEST_ACCOUNT_TOKEN: ${{ secrets.TEST_ACCOUNT_TOKEN }}
     
     - name: Build and test with Maven
       run: mvn -B verify --file pom.xml
@@ -28,7 +31,7 @@ jobs:
     - name: Build and push Docker image
       uses: mr-smithers-excellent/docker-build-push@v5
       with:
-        image: senoussiAl/dockerfile
+        image: senoussiAl/contact-management-service
         tags: "latest"
         registry: "docker.io"
         dockerfile: "Dockerfile"
@@ -37,4 +40,4 @@ jobs:
       # Secrets should be set in the repository settings
 
     - name: Push Docker Image to Docker Hub
-      run: docker push senoussial/dockerfile:${{ github.sha }}
+      run: docker push senoussial/contact-management-service:${{ github.sha }}
