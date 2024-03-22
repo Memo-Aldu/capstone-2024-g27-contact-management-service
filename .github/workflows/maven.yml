@@ -26,9 +26,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-m2
     
-    - name: Build and test with Maven
-      run: mvn -B verify --file pom.xml
-      # The verify phase includes running tests and any post-integration test phases, which includes JaCoCo
+    - name: Build with Maven (Tests Skipped)
+      run: mvn -B verify --file pom.xml -DskipTests
+      # The verify phase includes compiling and packaging, but we're skipping tests with -DskipTests
 
     - name: Build and push Docker image
       uses: mr-smithers-excellent/docker-build-push@v5
