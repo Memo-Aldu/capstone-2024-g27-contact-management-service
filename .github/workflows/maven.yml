@@ -52,8 +52,8 @@ jobs:
         SPRING_JPA_HIBERNATE_DDL_AUTO: update
         SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: contact_service_db
 
-    - name: Build with Maven (Tests Skipped)
-      run: mvn -B verify --file pom.xml -DskipTests
+    - name: Build with Maven
+      run: mvn clean test install
       env:
         SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/postgres
         SPRING_DATASOURCE_USERNAME: postgres
