@@ -1,23 +1,64 @@
-name: Java CI with Maven
+name: Java CI/CD with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches: [ Contact-workflow ]
   pull_request:
-    branches: [ main ]
+    branches: [ Contact-workflow ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Set up JDK 21
       uses: actions/setup-java@v2
       with:
         java-version: '21'
         distribution: 'adopt'
+
+    - name: Wait for PostgreSQL to become ready
+      run: |
+        until pg_isready -h localhost -p 5432 -U postgres; do
+          echo "Waiting for PostgreSQL..."
+          sleep 5
+        done
+
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Test with Maven
-      run: mvn -B test --file pom.xml
+      env:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/postgres
+        SPRING_DATASOURCE_USERNAME: postgres
+        SPRING_DATASOURCE_PASSWORD: root
+        SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+        SPRING_JPA_DATABASE: postgresql
+        SPRING_JPA_HIBERNATE_DDL_AUTO: update
+        SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: contact_service_db
+
+    - name: Build with Maven
+      run: mvn clean test install
+      env:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/postgres
+        SPRING_DATASOURCE_USERNAME: postgres
+        SPRING_DATASOURCE_PASSWORD: root
+        SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+        SPRING_JPA_DATABASE: postgresql
+        SPRING_JPA_HIBERNATE_DDL_AUTO: update
+        SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: contact_service_db
