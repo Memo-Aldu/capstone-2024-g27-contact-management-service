@@ -2,9 +2,9 @@ name: Java CI/CD with Maven
 
 on:
   push:
-    branches: [ Contact-workflow ]
+    branches: [ main ]
   pull_request:
-    branches: [ Contact-workflow ]
+    branches: [ main ]
 
 jobs:
   build:
