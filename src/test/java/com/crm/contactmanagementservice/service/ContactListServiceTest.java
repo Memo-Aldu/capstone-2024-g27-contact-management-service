@@ -21,7 +21,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ContactListUnitTest {
+public class ContactListServiceTest {
 
     @Mock
     private ContactListRepository contactListRepository;

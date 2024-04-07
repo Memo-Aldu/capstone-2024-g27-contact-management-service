@@ -1,8 +1,6 @@
 package com.crm.contactmanagementservice.service;
 import com.crm.contactmanagementservice.dto.ContactDTO;
-import com.crm.contactmanagementservice.dto.ContactListDTO;
 import com.crm.contactmanagementservice.entity.ContactEntity;
-import com.crm.contactmanagementservice.entity.ContactListEntity;
 import com.crm.contactmanagementservice.mapper.ContactMapper;
 import com.crm.contactmanagementservice.repository.ContactRepository;
 import com.crm.contactmanagementservice.service.impl.ContactServiceImpl;
@@ -25,7 +23,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ContactUnitTest {
+public class ContactServiceTest {
 
     @Mock
     private ContactRepository contactRepository;
