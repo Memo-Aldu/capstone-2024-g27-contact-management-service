@@ -22,6 +22,10 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Integration tests for the ContactListController.
+ * This class tests the ContactListController methods by mocking the ContactListService and simulating HTTP requests.
+ */
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ContactListController.class)
 public class ContactListIntegrationTest {
@@ -37,12 +41,20 @@ public class ContactListIntegrationTest {
 
     private ContactListDTO contactListDTO;
 
+    /**
+     * Sets up the test environment before each test.
+     * Creates a ContactListDTO object to be used in the tests.
+     */
     @BeforeEach
     public void setup() {
         UUID contactListId = UUID.randomUUID();
         contactListDTO = new ContactListDTO(contactListId, "My Contacts", UUID.randomUUID());
     }
 
+    /**
+     * Tests the getContactListById method of the ContactListController.
+     * The test passes if the HTTP status is OK and the returned ContactListDTO's list name matches the expected list name.
+     */
     @Test
     @DisplayName("Get ContactList By Id - GET /api/v1/contactlists/{id}")
     public void givenContactListId_whenGetContactListById_thenReturnContactList() throws Exception {
@@ -54,6 +66,10 @@ public class ContactListIntegrationTest {
                 .andExpect(jsonPath("$.listName").value(contactListDTO.listName()));
     }
 
+    /**
+     * Tests the createContactList method of the ContactListController.
+     * The test passes if the HTTP status is Created and the returned ContactListDTO's list name matches the expected list name.
+     */
     @Test
     @DisplayName("Create ContactList - POST /api/v1/contactlists")
     public void givenContactListDTO_whenCreateContactList_thenReturnSavedContactList() throws Exception {
@@ -67,6 +83,10 @@ public class ContactListIntegrationTest {
                 .andExpect(jsonPath("$.listName").value(contactListDTO.listName()));
     }
 
+    /**
+     * Tests the updateContactList method of the ContactListController.
+     * The test passes if the HTTP status is OK and the returned ContactListDTO's list name matches the expected list name.
+     */
     @Test
     @DisplayName("Update ContactList - PATCH /api/v1/contactlists/{id}")
     public void givenUpdatedContactListDTO_whenUpdateContactList_thenReturnUpdatedContactList() throws Exception {
@@ -80,6 +100,10 @@ public class ContactListIntegrationTest {
                 .andExpect(jsonPath("$.listName").value(contactListDTO.listName()));
     }
 
+    /**
+     * Tests the deleteContactListById method of the ContactListController.
+     * The test passes if the HTTP status is No Content.
+     */
     @Test
     @DisplayName("Delete ContactList By Id - DELETE /api/v1/contactlists/{id}")
     public void givenContactListId_whenDeleteContactListById_thenStatusNoContent() throws Exception {
@@ -87,6 +111,10 @@ public class ContactListIntegrationTest {
                 .andExpect(status().isNoContent());
     }
 
+    /**
+     * Tests the getAllContactLists method of the ContactListController.
+     * The test passes if the HTTP status is OK and the returned ContactListDTO's list name matches the expected list name.
+     */
     @Test
     @DisplayName("Get All ContactLists - GET /api/v1/contactlists")
     public void whenGetAllContactLists_thenReturnContactListsList() throws Exception {
