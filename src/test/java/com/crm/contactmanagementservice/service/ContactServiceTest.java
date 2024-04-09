@@ -1,11 +1,12 @@
 package com.crm.contactmanagementservice.service;
+
 import com.crm.contactmanagementservice.dto.ContactDTO;
 import com.crm.contactmanagementservice.entity.ContactEntity;
 import com.crm.contactmanagementservice.mapper.ContactMapper;
 import com.crm.contactmanagementservice.repository.ContactRepository;
 import com.crm.contactmanagementservice.service.impl.ContactServiceImpl;
-
 import com.crm.contactmanagementservice.exceptions.AppEntityNotFoundException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the ContactService.
+ * This class tests the ContactService methods by mocking the ContactRepository and ContactMapper and simulating the service's behavior.
+ */
 @ExtendWith(MockitoExtension.class)
 public class ContactServiceTest {
 
@@ -35,10 +40,12 @@ public class ContactServiceTest {
     private ContactServiceImpl contactService;
 
     private ContactEntity contactEntity;
-
-
     private ContactDTO contactDTO;
 
+    /**
+     * Sets up the test environment before each test.
+     * Initializes the ContactEntity and ContactDTO objects to be used in the tests.
+     */
     @BeforeEach
     public void setup(){
         UUID id = UUID.randomUUID();
@@ -52,26 +59,39 @@ public class ContactServiceTest {
         contactDTO = new ContactDTO(id, null, "June", "Thomas", null, "junethomas@test.com", "1234567890", null, null, false);
     }
 
+    /**
+     * Tests the createContact method of the ContactService.
+     * The test passes if the returned ContactDTO is not null and its email matches the expected email.
+     */
     @DisplayName("JUnit test for createContact method")
     @Test
     public void givenContactObject_whenCreateContact_thenReturnContactObject() {
-            given(contactMapper.toEntity(any(ContactDTO.class))).willReturn(contactEntity);
-            given(contactRepository.save(any(ContactEntity.class))).willReturn(contactEntity);
-            given(contactMapper.toDTO(any(ContactEntity.class))).willReturn(contactDTO);
-            ContactDTO savedContact = contactService.createContact(contactDTO);
-            assertThat(savedContact).isNotNull();
-            assertThat(savedContact.email()).isEqualTo(contactEntity.getEmail());
+        given(contactMapper.toEntity(any(ContactDTO.class))).willReturn(contactEntity);
+        given(contactRepository.save(any(ContactEntity.class))).willReturn(contactEntity);
+        given(contactMapper.toDTO(any(ContactEntity.class))).willReturn(contactDTO);
+        ContactDTO savedContact = contactService.createContact(contactDTO);
+        assertThat(savedContact).isNotNull();
+        assertThat(savedContact.email()).isEqualTo(contactEntity.getEmail());
     }
+
+    /**
+     * Tests the getContactById method of the ContactService.
+     * The test passes if the returned ContactDTO is not null and its id matches the expected id.
+     */
     @DisplayName("JUnit test for getContactById method")
     @Test
     public void givenContactId_whenGetContactById_thenReturnContactObject() {
-
         given(contactRepository.findContactEntityById(contactEntity.getId())).willReturn(Optional.of(contactEntity));
         given(contactMapper.toDTO(contactEntity)).willReturn(contactDTO);
         ContactDTO foundContact = contactService.getContactById(contactEntity.getId());
         assertThat(foundContact).isNotNull();
         assertThat(foundContact.id()).isEqualTo(contactEntity.getId());
     }
+
+    /**
+     * Tests the getContactByEmail method of the ContactService.
+     * The test passes if the returned ContactDTO is not null and its email matches the expected email.
+     */
     @DisplayName("JUnit test for getContactByEmail method")
     @Test
     public void givenContactEmail_whenGetContactByEmail_thenReturnContactObject() {
@@ -82,6 +102,11 @@ public class ContactServiceTest {
         assertThat(resultContact).isNotNull();
         assertThat(resultContact.email()).isEqualTo(email);
     }
+
+    /**
+     * Tests the getContactByPhone method of the ContactService.
+     * The test passes if the returned ContactDTO is not null and its phone matches the expected phone.
+     */
     @DisplayName("JUnit test for getContactByPhone method")
     @Test
     public void givenContactPhone_whenGetContactByPhone_thenReturnContactObject() {
@@ -93,6 +118,11 @@ public class ContactServiceTest {
         assertThat(resultContact).isNotNull();
         assertThat(resultContact.phone()).isEqualTo(phone);
     }
+
+    /**
+     * Tests the updateContact method of the ContactService.
+     * The test passes if the returned ContactDTO is not null and its email matches the expected email.
+     */
     @DisplayName("JUnit test for updateContact method")
     @Test
     public void givenUpdatedContactObject_whenUpdateContact_thenReturnUpdatedContactObject() {
@@ -108,6 +138,11 @@ public class ContactServiceTest {
         assertThat(updatedContact).isNotNull();
         assertThat(updatedContact.email()).isEqualTo("junethomas@test.com");
     }
+
+    /**
+     * Tests the deleteContactById method of the ContactService.
+     * The test passes if the deletion is verified.
+     */
     @DisplayName("JUnit test for deleteContactById method")
     @Test
     public void givenContactId_whenDeleteContactById_thenNothing() {
@@ -119,6 +154,11 @@ public class ContactServiceTest {
 
         verify(contactRepository, times(1)).deleteContactEntityById(contactId);
     }
+
+    /**
+     * Tests the getAllContacts method of the ContactService.
+     * The test passes if the returned set of ContactDTOs is not null and has a size of 1.
+     */
     @DisplayName("JUnit test for getAllContacts method")
     @Test
     public void whenGetAllContacts_thenReturnContactsList() {
@@ -130,6 +170,10 @@ public class ContactServiceTest {
         assertThat(contacts).isNotNull().hasSize(1);
     }
 
+    /**
+     * Tests the searchContactsByName method of the ContactService.
+     * The test passes if the returned set of ContactDTOs is not null, has a size of 1, and the first name of the first ContactDTO matches the expected first name.
+     */
     @DisplayName("JUnit test for searchContactsByName method")
     @Test
     public void givenName_whenSearchContactsByName_thenReturnContactsList() {
@@ -144,6 +188,11 @@ public class ContactServiceTest {
         assertThat(result).isNotNull().hasSize(1);
         assertThat(result.iterator().next().firstName()).isEqualTo(contactDTO.firstName());
     }
+
+    /**
+     * Tests the getAllContactsByContactListId method of the ContactService.
+     * The test passes if the returned set of ContactDTOs is not null, has a size of 1, and the first ContactDTO matches the expected ContactDTO.
+     */
     @DisplayName("JUnit test for getAllContactsByContactListId method")
     @Test
     public void givenContactListId_whenGetAllContactsByContactListId_thenReturnContactsSet() {
@@ -159,6 +208,11 @@ public class ContactServiceTest {
         assertThat(contacts).isNotNull().hasSize(1);
         assertThat(contacts.iterator().next()).isEqualTo(contactDTO);
     }
+
+    /**
+     * Tests the getContactById method of the ContactService with a non-existent contact.
+     * The test passes if an AppEntityNotFoundException is thrown.
+     */
     @DisplayName("JUnit test for getContactById method with non-existent contact")
     @Test
     public void givenNonExistentContactId_whenGetContactById_thenThrowException() {
@@ -167,6 +221,10 @@ public class ContactServiceTest {
         assertThrows(AppEntityNotFoundException.class, () -> contactService.getContactById(contactEntity.getId()));
     }
 
+    /**
+     * Tests the getContactByEmail method of the ContactService with a non-existent email.
+     * The test passes if an AppEntityNotFoundException is thrown.
+     */
     @DisplayName("JUnit test for getContactByEmail method with non-existent email")
     @Test
     public void givenNonExistentEmail_whenGetContactByEmail_thenThrowException() {
@@ -175,6 +233,10 @@ public class ContactServiceTest {
         assertThrows(AppEntityNotFoundException.class, () -> contactService.getContactByEmail("nonexistentemail@test.com"));
     }
 
+    /**
+     * Tests the getContactByPhone method of the ContactService with a non-existent phone.
+     * The test passes if an AppEntityNotFoundException is thrown.
+     */
     @DisplayName("JUnit test for getContactByPhone method with non-existent phone")
     @Test
     public void givenNonExistentPhone_whenGetContactByPhone_thenThrowException() {
@@ -183,6 +245,10 @@ public class ContactServiceTest {
         assertThrows(AppEntityNotFoundException.class, () -> contactService.getContactByPhone("0000000000"));
     }
 
+    /**
+     * Tests the updateContact method of the ContactService with a non-existent contact.
+     * The test passes if an AppEntityNotFoundException is thrown.
+     */
     @DisplayName("JUnit test for updateContact method with non-existent contact")
     @Test
     public void givenNonExistentContactId_whenUpdateContact_thenThrowException() {
@@ -190,7 +256,10 @@ public class ContactServiceTest {
 
         assertThrows(AppEntityNotFoundException.class, () -> contactService.updateContact(contactDTO, contactEntity.getId()));
     }
-
+    /**
+     * Tests the deleteContactById method of the ContactService with a non-existent contact.
+     * The test passes if an AppEntityNotFoundException is thrown.
+     */
     @DisplayName("JUnit test for deleteContactById method with non-existent contact")
     @Test
     public void givenNonExistentContactId_whenDeleteContactById_thenExpectDeletion() {
@@ -200,6 +269,10 @@ public class ContactServiceTest {
         verify(contactRepository, times(1)).deleteContactEntityById(contactEntity.getId());
     }
 
+    /**
+     * Tests the getAllContacts method of the ContactService when no contacts exist.
+     * The test passes if the returned set of ContactDTOs is empty.
+     */
     @DisplayName("JUnit test for getAllContacts method when no contacts exist")
     @Test
     public void whenGetAllContacts_andNoContactsExist_thenReturnEmptySet() {
@@ -210,6 +283,10 @@ public class ContactServiceTest {
         assertThat(result).isEmpty();
     }
 
+    /**
+     * Tests the getAllContactsByContactListId method of the ContactService when no contacts are linked to the contact list.
+     * The test passes if the returned set of ContactDTOs is empty.
+     */
     @DisplayName("JUnit test for getAllContactsByContactListId method when no contacts linked")
     @Test
     public void givenContactListIdWithNoLinkedContacts_whenGetAllContactsByContactListId_thenReturnEmptySet() {
@@ -221,6 +298,10 @@ public class ContactServiceTest {
         assertThat(result).isEmpty();
     }
 
+    /**
+     * Tests the searchContactsByName method of the ContactService when no contacts match the provided name.
+     * The test passes if the returned set of ContactDTOs is empty.
+     */
     @DisplayName("JUnit test for searchContactsByName method when no matching contacts found")
     @Test
     public void givenNameWithNoMatchingContacts_whenSearchContactsByName_thenReturnEmptySet() {

@@ -114,7 +114,6 @@
             <configuration>
                 <excludes>
                     <exclude>**/entity/*</exclude>
-                    <exclude>**/dto/*</exclude>
                     <exclude>**/exceptions/*</exclude>
                 </excludes>
             </configuration>

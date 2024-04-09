@@ -27,6 +27,10 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Integration tests for the ContactController.
+ * This class tests the ContactController methods by mocking the ContactService and simulating HTTP requests.
+ */
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ContactController.class)
 public class ContactIntegrationTest {
@@ -42,12 +46,20 @@ public class ContactIntegrationTest {
 
     private ContactDTO contactDTO;
 
+    /**
+     * Sets up the test environment before each test.
+     * Creates a ContactDTO object to be used in the tests.
+     */
     @BeforeEach
     public void setup() {
         UUID contactId = UUID.randomUUID();
         contactDTO = new ContactDTO(contactId, null, "June", "Thomas", null, "junethomas@test.com", "1234567890", null, null, false);
     }
 
+    /**
+     * Tests the getContactById method of the ContactController.
+     * The test passes if the HTTP status is OK and the returned ContactDTO's email matches the expected email.
+     */
     @Test
     @DisplayName("Get Contact By Id - GET /api/v1/contacts/{id}")
     public void givenContactId_whenGetContactById_thenReturnContact() throws Exception {
@@ -59,6 +71,10 @@ public class ContactIntegrationTest {
                 .andExpect(jsonPath("$.email").value(contactDTO.email()));
     }
 
+    /**
+     * Tests the createContact method of the ContactController.
+     * The test passes if the HTTP status is Created and the returned ContactDTO's email matches the expected email.
+     */
     @Test
     @DisplayName("Create Contact - POST /api/v1/contacts")
     public void givenContactDTO_whenCreateContact_thenReturnSavedContact() throws Exception {
@@ -72,6 +88,10 @@ public class ContactIntegrationTest {
                 .andExpect(jsonPath("$.email").value(contactDTO.email()));
     }
 
+    /**
+     * Tests the updateContact method of the ContactController.
+     * The test passes if the HTTP status is OK and the returned ContactDTO's email matches the expected email.
+     */
     @Test
     @DisplayName("Update Contact - PATCH /api/v1/contacts/{id}")
     public void givenUpdatedContactDTO_whenUpdateContact_thenReturnUpdatedContact() throws Exception {
@@ -85,6 +105,10 @@ public class ContactIntegrationTest {
                 .andExpect(jsonPath("$.email").value(contactDTO.email()));
     }
 
+    /**
+     * Tests the deleteContactById method of the ContactController.
+     * The test passes if the HTTP status is No Content.
+     */
     @Test
     @DisplayName("Delete Contact By Id - DELETE /api/v1/contacts/{id}")
     public void givenContactId_whenDeleteContactById_thenStatusNoContent() throws Exception {
@@ -92,6 +116,10 @@ public class ContactIntegrationTest {
                 .andExpect(status().isNoContent());
     }
 
+    /**
+     * Tests the searchContactsByName method of the ContactController.
+     * The test passes if the HTTP status is OK and the returned ContactDTO's first name matches the expected first name.
+     */
     @Test
     @DisplayName("Search Contacts By Name - GET /api/v1/contacts/search/{name}")
     public void givenContactName_whenSearchContactsByName_thenReturnContactsList() throws Exception {
@@ -102,6 +130,4 @@ public class ContactIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].firstName").value(contactDTO.firstName()));
     }
-
-
 }
