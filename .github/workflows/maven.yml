@@ -1,0 +1,82 @@
+# Name of the workflow
+name: Java CI/CD with Maven
+
+# Define when the workflow should be triggered
+on:
+  # Trigger the workflow on push or pull request events to the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# Define the jobs to be run
+jobs:
+  # Define the build job
+  build:
+    # Specify the type of runner that the job will run on
+    runs_on: ubuntu-latest
+
+    # Define the services that the job will use
+    services:
+      # Define the postgres service
+      postgres:
+        # Specify the Docker image to use for the service
+        image: postgres:latest
+        # Define environment variables for the service
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+        # Define the ports to expose for the service
+        ports:
+          - 5432:5432
+        # Define the options for the service
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    # Define the steps of the build job
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v2
+
+      # Set up JDK 21
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+
+      # Wait for PostgreSQL to become ready
+      - name: Wait for PostgreSQL to become ready
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for PostgreSQL..."
+            sleep 5
+          done
+
+      # Build the project with Maven
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/postgres
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: root
+          SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+          SPRING_JPA_DATABASE: postgresql
+          SPRING_JPA_HIBERNATE_DDL_AUTO: update
+          SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: contact_service_db
+
+      # Run tests and install the project with Maven
+      - name: Build with Maven
+        run: mvn clean test install
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/postgres
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: root
+          SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+          SPRING_JPA_DATABASE: postgresql
+          SPRING_JPA_HIBERNATE_DDL_AUTO: update
+          SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: contact_service_db
