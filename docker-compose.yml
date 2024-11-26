@@ -34,7 +34,6 @@ services:
     environment:
       # Database connection URL
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgre
-      # Database username
       SPRING_DATASOURCE_USERNAME: postgres
       # Database password
       SPRING_DATASOURCE_PASSWORD: root
@@ -44,8 +43,8 @@ services:
     # Port mapping for the application service
     ports:
       - "8080:8080"
-
 # Define the volumes used in the services
 volumes:
   # Persistent volume for the database data
   my_db_data:
+
