@@ -1,6 +1,8 @@
 package com.crm.contactmanagementservice.repository;
 
 import com.crm.contactmanagementservice.entity.ContactEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,25 +29,14 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
      * @param id The id of the contact to find.
      * @return An Optional that may contain the found ContactEntity.
      */
-    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE c.id = :id", nativeQuery = true)
-    Optional<ContactEntity> findContactEntityById(@Param("id") UUID id);
+    Optional<ContactEntity> findContactEntitiesById(@Param("id") UUID id);
 
     /**
      * Custom query to find all contacts.
      * This query is executed natively, meaning it is written in SQL and not JPQL.
      * @return A Set of all ContactEntity.
      */
-    @Query(value = "SELECT * FROM contact_service_db.contact", nativeQuery = true)
-    Set<ContactEntity> findAllContactEntities();
-
-    /**
-     * Custom query to find all contacts by a contact list's id.
-     * This query is executed natively, meaning it is written in SQL and not JPQL.
-     * @param contactListId The id of the contact list whose contacts to find.
-     * @return A Set of ContactEntity that belong to the contact list.
-     */
-    @Query(value = "SELECT * FROM contact_service_db.contact WHERE contact_list_id = :contactListId", nativeQuery = true)
-    Set<ContactEntity> findAllContactsByContactListId(@Param("contactListId") UUID contactListId);
+    Page<ContactEntity> findAllBy(Pageable page);
 
     /**
      * Custom query to find a contact by its email.
@@ -53,8 +44,7 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
      * @param email The email of the contact to find.
      * @return An Optional that may contain the found ContactEntity.
      */
-    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE c.contact_email = :email", nativeQuery = true)
-    Optional<ContactEntity> findContactEntityByEmail(@Param("email") String email);
+    Optional<ContactEntity> findContactEntitiesByEmail(@Param("email") String email);
 
     /**
      * Custom query to find a contact by its phone.
@@ -62,8 +52,7 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
      * @param phone The phone of the contact to find.
      * @return An Optional that may contain the found ContactEntity.
      */
-    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE c.contact_phone = :phone", nativeQuery = true)
-    Optional<ContactEntity> findContactEntityByPhone(@Param("phone") String phone);
+    Optional<ContactEntity> findContactEntitiesByPhone(@Param("phone") String phone);
 
     /**
      * Custom query to search for contacts by name.
@@ -72,7 +61,7 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
      * @param name The name to search for.
      * @return A Set of ContactEntity that match the search criteria.
      */
-    @Query(value = "SELECT * FROM contact_service_db.contact c WHERE LOWER(c.contact_first_Name) LIKE LOWER(:name) OR LOWER(c.contact_last_name) LIKE LOWER(:name) OR LOWER(c.contact_preferred_name) LIKE LOWER(:name)", nativeQuery = true)
+    @Query(value = "SELECT * FROM public.contact c WHERE LOWER(c.contact_first_Name) LIKE LOWER(:name) OR LOWER(c.contact_last_name) LIKE LOWER(:name) OR LOWER(c.contact_preferred_name) LIKE LOWER(:name)", nativeQuery = true)
     Set<ContactEntity> searchByName(@Param("name") String name);
 
     /**
@@ -83,7 +72,7 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
      */
     @Transactional
     @Modifying
-    @Query(value = "DELETE FROM contact_service_db.contact c WHERE c.id = :id", nativeQuery = true)
+    @Query(value = "DELETE FROM public.contact c WHERE c.id = :id", nativeQuery = true)
     void deleteContactEntityById(@Param("id") UUID id);
 
 }
