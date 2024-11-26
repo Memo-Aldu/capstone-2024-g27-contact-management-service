@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE TABLE contact
 (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    contact_list_id UUID NULL REFERENCES contact_service_db.contact_list(id) ON DELETE SET NULL,
+    contact_list_id UUID NULL REFERENCES public.contact_list(id) ON DELETE SET NULL,
     contact_first_name TEXT           NULL,
     contact_last_name  TEXT           NULL,
     contact_preferred_name  TEXT      NULL,

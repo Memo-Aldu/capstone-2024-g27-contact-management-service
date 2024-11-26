@@ -1,50 +1,39 @@
-# Docker Compose file version
 version: '3.8'
-
-# Define the services that make up the application
+networks:
+    main-network:
+        external: false
+        name: ${NETWORK_NAME}
 services:
-  # Database service
-  db:
-    # Docker image to use for the database service
+  postgres:
     image: postgres:latest
-    # Name of the database container
     container_name: contact_service_db_container
-    # Environment variables for the database service
     environment:
-      # Name of the database
-      POSTGRES_DB: postgres
-      # Username for the database
-      POSTGRES_USER: postgres
-      # Password for the database
-      POSTGRES_PASSWORD: root
-    # Port mapping for the database service
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
-    # Persistent volume for the database data
+      - ${POSTGRES_PORT}:5432
     volumes:
       - my_db_data:/var/lib/postgresql/data
-
-  # Application service
+    networks:
+        - main-network
   app:
-    # Docker image to use for the application service
     image: contact-management-service:latest
-    # Name of the application container
     container_name: contact_service_app_container
-    # Environment variables for the application service
-    environment:
-      # Database connection URL
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgre
-      SPRING_DATASOURCE_USERNAME: postgres
-      # Database password
-      SPRING_DATASOURCE_PASSWORD: root
-    # Define the dependency of the application service on the database service
-    depends_on:
-      - db
-    # Port mapping for the application service
+    hostname: ${CONTAINER_HOST}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - CONTAINER_PORT=${CONTAINER_PORT}
+    env_file:
+      - ${ENV_FILE}
     ports:
-      - "8080:8080"
-# Define the volumes used in the services
-volumes:
-  # Persistent volume for the database data
-  my_db_data:
+      - ${APP_PORT}:${CONTAINER_PORT}
+    depends_on:
+      - postgres
+    networks:
+        - main-network
 
+volumes:
+  my_db_data:

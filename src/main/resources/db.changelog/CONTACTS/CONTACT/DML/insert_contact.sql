@@ -1,6 +1,6 @@
 
 
-INSERT INTO contact_service_db.contact (id, contact_first_name, contact_last_name, contact_email, contact_phone) VALUES
+INSERT INTO public.contact (id, contact_first_name, contact_last_name, contact_email, contact_phone) VALUES
 
 
    (gen_random_uuid(), 'Vinicius', 'Junior', 'vinicius@example.com', '5678901234'),
