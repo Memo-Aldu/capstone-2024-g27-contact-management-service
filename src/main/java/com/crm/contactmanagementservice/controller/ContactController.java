@@ -41,6 +41,16 @@ public class ContactController {
     }
 
     /**
+     * Fetches all contacts from a contact list by its ID.
+     * @param id The ID of the contact list.
+     * @return A Set of ContactDTO representing all contacts in the specified contact list.
+     */
+    @GetMapping("/contact-list/{id}")
+    public ResponseEntity<Set<ContactDTO>> getAllContactsByContactListID(@PathVariable UUID id) {
+        return ResponseEntity.ok(contactService.getAllContactsByContactListID(id));
+    }
+
+    /**
      * Creates a new contact.
      * @param contactDTO The contact DTO to create.
      * @return The created contact DTO.

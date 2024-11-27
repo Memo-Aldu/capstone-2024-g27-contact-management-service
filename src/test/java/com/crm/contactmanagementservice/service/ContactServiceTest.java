@@ -313,4 +313,39 @@ public class ContactServiceTest {
         assertThat(result).isEmpty();
     }
 
+    /**
+     * Tests the getAllContactsByContactListID method of the ContactService.
+     * The test passes if the returned set of ContactDTOs is not null and has a size of 1.
+     */
+    @DisplayName("JUnit test for getAllContactsByContactListID method")
+    @Test
+    public void givenContactListId_whenGetAllContactsByContactListID_thenReturnContactsSet() {
+        UUID contactListId = UUID.randomUUID();
+        Set<ContactEntity> contactEntitySet = new LinkedHashSet<>();
+        contactEntitySet.add(contactEntity);
+
+        given(contactRepository.findAllContactsByContactListId(contactListId)).willReturn(contactEntitySet);
+        given(contactMapper.toDTO(any(ContactEntity.class))).willReturn(contactDTO);
+
+        Set<ContactDTO> contacts = contactService.getAllContactsByContactListID(contactListId);
+
+        assertThat(contacts).isNotNull().hasSize(1);
+        assertThat(contacts.iterator().next()).isEqualTo(contactDTO);
+    }
+
+    /**
+     * Tests the getAllContactsByContactListID method of the ContactService when no contacts are linked to the contact list.
+     * The test passes if the returned set of ContactDTOs is empty.
+     */
+    @DisplayName("JUnit test for getAllContactsByContactListID method when no contacts linked")
+    @Test
+    public void givenContactListIdWithNoLinkedContacts_whenGetAllContactsByContactListID_thenReturnEmptySet() {
+        UUID contactListId = UUID.randomUUID();
+        given(contactRepository.findAllContactsByContactListId(contactListId)).willReturn(Collections.emptySet());
+
+        Set<ContactDTO> result = contactService.getAllContactsByContactListID(contactListId);
+
+        assertThat(result).isEmpty();
+    }
+
 }
