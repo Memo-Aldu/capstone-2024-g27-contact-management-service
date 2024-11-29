@@ -183,4 +183,36 @@ public class ContactListServiceTest {
         assertThrows(RuntimeException.class, () -> contactListService.deleteContactListById(nonExistentId));
         verify(contactListRepository, times(1)).deleteById(nonExistentId);
     }
+    /**
+     * JUnit test for getAllContactListsByUserId method.
+     * This test verifies that the service method returns a set of contact lists for a given user ID.
+     * It mocks the repository and mapper to simulate the service's behavior.
+     */
+    @DisplayName("JUnit test for getAllContactListsByUserId method")
+    @Test
+    public void givenUserId_whenGetAllContactListsByUserId_thenReturnContactListsSet() {
+        UUID userId = UUID.randomUUID();
+        given(contactListRepository.findAllContactListsByUserId(userId)).willReturn(Set.of(contactListEntity));
+        given(contactListMapper.toDTO(contactListEntity)).willReturn(contactListDTO);
+
+        Set<ContactListDTO> contactLists = contactListService.getAllContactListsByUserId(userId);
+
+        assertThat(contactLists).isNotNull().hasSize(1);
+    }
+
+    /**
+     * JUnit test for getAllContactListsByUserId method when no contact lists exist.
+     * This test verifies that the service method returns an empty set when no contact lists exist for a given user ID.
+     * It mocks the repository to return an empty set.
+     */
+    @DisplayName("JUnit test for getAllContactListsByUserId method when no contact lists exist")
+    @Test
+    public void givenUserId_whenGetAllContactListsByUserId_andNoContactListsExist_thenReturnEmptySet() {
+        UUID userId = UUID.randomUUID();
+        given(contactListRepository.findAllContactListsByUserId(userId)).willReturn(Collections.emptySet());
+
+        Set<ContactListDTO> contactLists = contactListService.getAllContactListsByUserId(userId);
+
+        assertThat(contactLists).isEmpty();
+    }
 }

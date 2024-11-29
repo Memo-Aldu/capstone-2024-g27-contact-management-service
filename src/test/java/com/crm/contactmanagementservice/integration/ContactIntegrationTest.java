@@ -162,4 +162,27 @@ public class ContactIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isEmpty());
     }
+    @Test
+    @DisplayName("Get All Contacts By User ID - GET /api/v1/contacts/user/{userId}")
+    public void givenUserId_whenGetAllContactsByUserId_thenReturnContacts() throws Exception {
+        UUID userId = UUID.randomUUID();
+        given(contactService.getAllContactsByUserId(userId)).willReturn(Set.of(contactDTO));
+
+        mockMvc.perform(get("/api/v1/contacts/user/{userId}", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].email").value(contactDTO.email()));
+    }
+
+    @Test
+    @DisplayName("Get All Contacts By User ID - GET /api/v1/contacts/user/{userId} - No Contacts Found")
+    public void givenUserId_whenGetAllContactsByUserId_thenReturnEmptySet() throws Exception {
+        UUID userId = UUID.randomUUID();
+        given(contactService.getAllContactsByUserId(userId)).willReturn(Collections.emptySet());
+
+        mockMvc.perform(get("/api/v1/contacts/user/{userId}", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isEmpty());
+    }
 }

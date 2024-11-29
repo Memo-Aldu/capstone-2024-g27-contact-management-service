@@ -48,6 +48,17 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
     Set<ContactEntity> findAllContactsByContactListId(@Param("contactListId") UUID contactListId);
 
     /**
+     * Custom query to find all contacts for a given user ID.
+     * This query fetches all contact lists for the user and then lists all contacts from those contact lists.
+     * @param userId The ID of the user whose contacts to find.
+     * @return A Set of ContactEntity that belong to the user's contact lists.
+     */
+    @Query(value = "SELECT c.* FROM contact_service_db.contact c " +
+            "JOIN contact_service_db.contact_list cl ON c.contact_list_id = cl.id " +
+            "WHERE cl.user_id = :userId", nativeQuery = true)
+    Set<ContactEntity> findAllContactsByUserId(@Param("userId") UUID userId);
+
+    /**
      * Custom query to find a contact by its email.
      * This query is executed natively, meaning it is written in SQL and not JPQL.
      * @param email The email of the contact to find.

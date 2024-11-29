@@ -1,12 +1,16 @@
 package com.crm.contactmanagementservice.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.crm.contactmanagementservice.config.WebSocketHandler;
 import com.crm.contactmanagementservice.dto.ContactListDTO;
 import com.crm.contactmanagementservice.service.ContactListService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,11 +21,12 @@ import java.util.UUID;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/v1/contactlists")
+@RequestMapping("/api/v1/contact_lists")
 @AllArgsConstructor
 public class ContactListController {
 
     private final ContactListService contactListService;
+    private final ObjectMapper objectMapper;
 
     /**
      * Fetches a contact list by its ID.
@@ -49,7 +54,24 @@ public class ContactListController {
      */
     @PostMapping
     public ResponseEntity<ContactListDTO> createContactList(@RequestBody ContactListDTO contactListDTO) {
-        return new ResponseEntity<>(contactListService.createContactList(contactListDTO), HttpStatus.CREATED);
+        ContactListDTO createdContactList = contactListService.createContactList(contactListDTO);
+        try {
+            String message = objectMapper.writeValueAsString(createdContactList);
+            WebSocketHandler.broadcast(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(createdContactList, HttpStatus.CREATED);
+    }
+
+    /**
+     * Fetches all contact lists by user ID.
+     * @param id The ID of the user whose contact lists to fetch.
+     * @return A set of all contact list DTOs.
+     */
+    @GetMapping("/user/{id}")
+    public ResponseEntity<Set<ContactListDTO>> getAllContactListsByUserId(@PathVariable UUID id) {
+        return ResponseEntity.ok(contactListService.getAllContactListsByUserId(id));
     }
 
     /**

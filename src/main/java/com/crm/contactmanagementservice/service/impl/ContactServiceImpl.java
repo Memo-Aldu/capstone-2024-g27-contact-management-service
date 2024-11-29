@@ -88,6 +88,18 @@ public class ContactServiceImpl implements ContactService {
                 .map(contactMapper::toDTO)
                 .collect(Collectors.toSet());
     }
+    /**
+     * Fetches all contacts from a user ID.
+     * @param id The ID of the contact list.
+     * @return A Set of ContactDTO representing all contacts in the specified contact list.
+     */
+    @Override
+    public Set<ContactDTO> getAllContactsByUserId(UUID id) {
+        log.info("Fetching all contacts by user ID: {}", id);
+        return contactRepository.findAllContactsByUserId(id).stream()
+                .map(contactMapper::toDTO)
+                .collect(Collectors.toSet());
+    }
 
     /**
      * Fetches all contacts by a contact list ID.

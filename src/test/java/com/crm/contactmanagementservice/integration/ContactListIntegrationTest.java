@@ -125,4 +125,38 @@ public class ContactListIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].listName").value(contactListDTO.listName()));
     }
+
+
+    /**
+     * Tests the getAllContactListsByUserId method of the ContactListController.
+     * The test passes if the HTTP status is OK and the returned ContactListDTO's list name matches the expected list name.
+     */
+    @Test
+    @DisplayName("Get All ContactLists By User Id - GET /api/v1/contact_lists/user/{id}")
+    public void givenUserId_whenGetAllContactListsByUserId_thenReturnContactLists() throws Exception {
+        UUID userId = UUID.randomUUID();
+        given(contactListService.getAllContactListsByUserId(userId)).willReturn(Set.of(contactListDTO));
+
+        mockMvc.perform(get("/api/v1/contact_lists/user/{id}", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].listName").value(contactListDTO.listName()));
+    }
+
+    /**
+     * Tests the getAllContactListsByUserId method of the ContactListController when no contact lists exist.
+     * The test passes if the HTTP status is OK and the returned list is empty.
+     */
+    @Test
+    @DisplayName("Get All ContactLists By User Id - GET /api/v1/contact_lists/user/{id} - No Contact Lists")
+    public void givenUserId_whenGetAllContactListsByUserId_andNoContactListsExist_thenReturnEmptyList() throws Exception {
+        UUID userId = UUID.randomUUID();
+        given(contactListService.getAllContactListsByUserId(userId)).willReturn(Set.of());
+
+        mockMvc.perform(get("/api/v1/contact_lists/user/{id}", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
 }
