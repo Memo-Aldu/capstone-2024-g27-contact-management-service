@@ -63,7 +63,7 @@ public class ContactController {
      */
     @GetMapping("user/{userId}")
     public ResponseEntity<Set<ContactDTO>> getAllContactsByUserId(@PathVariable UUID userId) {
-        Set<ContactDTO> contacts = contactService.getAllContactsByContactListId(userId);
+        Set<ContactDTO> contacts = contactService.getAllContactsByUserId(userId);
         return ResponseEntity.ok(contacts);
     }
 
