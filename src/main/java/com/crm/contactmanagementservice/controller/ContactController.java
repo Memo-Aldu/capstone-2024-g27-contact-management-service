@@ -2,11 +2,16 @@ package com.crm.contactmanagementservice.controller;
 
 import com.crm.contactmanagementservice.dto.ContactDTO;
 import com.crm.contactmanagementservice.service.ContactService;
+import com.crm.contactmanagementservice.config.WebSocketHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,6 +25,7 @@ import java.util.UUID;
 public class ContactController {
 
     private final ContactService contactService;
+    private final ObjectMapper objectMapper;
 
     /**
      * Fetches a contact by its ID.
@@ -49,6 +55,7 @@ public class ContactController {
     public ResponseEntity<Set<ContactDTO>> getAllContactsByContactListID(@PathVariable UUID id) {
         return ResponseEntity.ok(contactService.getAllContactsByContactListID(id));
     }
+
     /**
      * Fetches all contacts for a given user ID.
      * @param userId The ID of the user whose contacts to fetch.
@@ -56,7 +63,7 @@ public class ContactController {
      */
     @GetMapping("user/{userId}")
     public ResponseEntity<Set<ContactDTO>> getAllContactsByUserId(@PathVariable UUID userId) {
-        Set<ContactDTO> contacts = contactService.getAllContactsByUserId(userId);
+        Set<ContactDTO> contacts = contactService.getAllContactsByContactListId(userId);
         return ResponseEntity.ok(contacts);
     }
 
@@ -67,7 +74,14 @@ public class ContactController {
      */
     @PostMapping
     public ResponseEntity<ContactDTO> createContact(@RequestBody ContactDTO contactDTO) {
-        return new ResponseEntity<>(contactService.createContact(contactDTO), HttpStatus.CREATED);
+        ContactDTO createdContact = contactService.createContact(contactDTO);
+        try {
+            String message = objectMapper.writeValueAsString(createdContact);
+            WebSocketHandler.broadcast(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(createdContact, HttpStatus.CREATED);
     }
 
     /**
@@ -78,7 +92,14 @@ public class ContactController {
      */
     @PatchMapping("/{id}")
     public ResponseEntity<ContactDTO> updateContact(@PathVariable UUID id, @RequestBody ContactDTO contactDTO) {
-        return ResponseEntity.ok(contactService.updateContact(contactDTO, id));
+        ContactDTO updatedContact = contactService.updateContact(contactDTO, id);
+        try {
+            String message = objectMapper.writeValueAsString(updatedContact);
+            WebSocketHandler.broadcast(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(updatedContact);
     }
 
     /**
@@ -89,7 +110,16 @@ public class ContactController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteContactById(@PathVariable UUID id) {
         contactService.deleteContactById(id);
-        return ResponseEntity.noContent().build();
+        try {
+            Map<String, Object> deleteMessage = new HashMap<>();
+            deleteMessage.put("id", id.toString());
+            deleteMessage.put("deleted", true);
+            String message = objectMapper.writeValueAsString(deleteMessage);
+            WebSocketHandler.broadcast(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
@@ -101,5 +131,4 @@ public class ContactController {
     public ResponseEntity<Set<ContactDTO>> searchContactsByName(@PathVariable String name) {
         return ResponseEntity.ok(contactService.searchContactsByName(name));
     }
-
 }

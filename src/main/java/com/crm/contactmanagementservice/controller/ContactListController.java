@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -48,6 +50,15 @@ public class ContactListController {
     }
 
     /**
+     * Fetches all contact lists by the user id.
+     * @return A set of all contact list DTOs.
+     */
+    @GetMapping("user/{id}")
+    public ResponseEntity<Set<ContactListDTO>> getAllContactListsByUserID(@PathVariable UUID id) {
+        Set<ContactListDTO> contactLists = contactListService.getAllContactListsByUserId(id);
+        return ResponseEntity.ok(contactLists);
+    }
+    /**
      * Creates a new contact list.
      * @param contactListDTO The contact list DTO to create.
      * @return The created contact list DTO.
@@ -65,16 +76,6 @@ public class ContactListController {
     }
 
     /**
-     * Fetches all contact lists by user ID.
-     * @param id The ID of the user whose contact lists to fetch.
-     * @return A set of all contact list DTOs.
-     */
-    @GetMapping("/user/{id}")
-    public ResponseEntity<Set<ContactListDTO>> getAllContactListsByUserId(@PathVariable UUID id) {
-        return ResponseEntity.ok(contactListService.getAllContactListsByUserId(id));
-    }
-
-    /**
      * Updates a contact list.
      * @param id The ID of the contact list to update.
      * @param contactListDTO The contact list DTO to update.
@@ -82,7 +83,14 @@ public class ContactListController {
      */
     @PatchMapping("/{id}")
     public ResponseEntity<ContactListDTO> updateContactList(@PathVariable UUID id, @RequestBody ContactListDTO contactListDTO) {
-        return ResponseEntity.ok(contactListService.updateContactList(contactListDTO, id));
+        ContactListDTO updatedContactList = contactListService.updateContactList(contactListDTO, id);
+        try {
+            String message = objectMapper.writeValueAsString(updatedContactList);
+            WebSocketHandler.broadcast(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(updatedContactList, HttpStatus.OK);
     }
 
     /**
@@ -93,7 +101,15 @@ public class ContactListController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteContactListById(@PathVariable UUID id) {
         contactListService.deleteContactListById(id);
-        return ResponseEntity.noContent().build();
+        try {
+            Map<String, Object> deleteMessage = new HashMap<>();
+            deleteMessage.put("id", id.toString());
+            deleteMessage.put("deleted", true);
+            String message = objectMapper.writeValueAsString(deleteMessage);
+            WebSocketHandler.broadcast(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }
