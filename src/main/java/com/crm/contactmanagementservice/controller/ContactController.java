@@ -19,7 +19,6 @@ import java.util.UUID;
  * REST controller for managing contacts.
  */
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/v1/contacts")
 @AllArgsConstructor
 public class ContactController {

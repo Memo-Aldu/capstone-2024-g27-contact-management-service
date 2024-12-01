@@ -22,7 +22,6 @@ import java.util.UUID;
  * It uses the ContactListService to perform these operations.
  */
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/v1/contact_lists")
 @AllArgsConstructor
 public class ContactListController {
