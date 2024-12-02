@@ -7,10 +7,8 @@ import com.crm.contactmanagementservice.repository.ContactListRepository;
 import com.crm.contactmanagementservice.entity.ContactListEntity;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
 
 import java.util.Set;
 import java.util.UUID;
@@ -39,7 +37,7 @@ public class ContactListServiceImpl implements ContactListService {
     public ContactListDTO getContactListById(UUID id) {
         log.info("Fetching contact list by id: {}", id);
         return contactListMapper.toDTO(contactListRepository.findContactListEntityById(id)
-                .orElseThrow(() -> new RuntimeException("ContactList not found"))); // Customize exception as needed
+                .orElseThrow(() -> new RuntimeException("ContactList not found")));
     }
 
     /**
@@ -77,7 +75,6 @@ public class ContactListServiceImpl implements ContactListService {
         ContactListEntity contactListEntity = contactListMapper.toEntity(contactListDTO);
         return contactListMapper.toDTO(contactListRepository.save(contactListEntity));
     }
-
 
     /**
      * Updates a contact list.

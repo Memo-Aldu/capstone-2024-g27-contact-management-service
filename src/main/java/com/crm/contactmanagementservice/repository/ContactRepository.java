@@ -96,6 +96,4 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
     @Modifying
     @Query(value = "DELETE FROM public.contact c WHERE c.id = :id", nativeQuery = true)
     void deleteContactEntityById(@Param("id") UUID id);
-
-    /*public.*/
 }

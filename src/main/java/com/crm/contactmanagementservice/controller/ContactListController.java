@@ -6,11 +6,7 @@ import com.crm.contactmanagementservice.service.ContactListService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,7 +21,6 @@ import java.util.UUID;
 public class ContactListController {
 
     private final ContactListService contactListService;
-    private final ObjectMapper objectMapper;
 
     /**
      * Fetches a contact list by its ID.

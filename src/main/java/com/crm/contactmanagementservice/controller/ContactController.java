@@ -6,11 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,7 +20,6 @@ import java.util.UUID;
 public class ContactController {
 
     private final ContactService contactService;
-    private final ObjectMapper objectMapper;
 
     /**
      * Fetches a contact by its ID.
