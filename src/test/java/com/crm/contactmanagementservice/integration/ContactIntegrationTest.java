@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -129,5 +130,60 @@ public class ContactIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].firstName").value(contactDTO.firstName()));
+    }
+
+    /**
+     * Tests the getAllContactsByContactListID method of the ContactController.
+     * The test passes if the HTTP status is OK and the returned set of ContactDTOs is not empty.
+     */
+    @Test
+    @DisplayName("Get All Contacts By Contact List ID - GET /api/v1/contacts/contact-list/{id}")
+    public void givenContactListId_whenGetAllContactsByContactListID_thenReturnContactsSet() throws Exception {
+        UUID contactListId = UUID.randomUUID();
+        given(contactService.getAllContactsByContactListID(contactListId)).willReturn(Set.of(contactDTO));
+
+        mockMvc.perform(get("/api/v1/contacts/contact-list/{id}", contactListId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].email").value(contactDTO.email()));
+    }
+
+    /**
+     * Tests the getAllContactsByContactListID method of the ContactController when no contacts are found.
+     * The test passes if the HTTP status is OK and the returned set of ContactDTOs is empty.
+     */
+    @Test
+    @DisplayName("Get All Contacts By Contact List ID - GET /api/v1/contacts/contact-list/{id} - No Contacts Found")
+    public void givenContactListId_whenGetAllContactsByContactListID_thenReturnEmptySet() throws Exception {
+        UUID contactListId = UUID.randomUUID();
+        given(contactService.getAllContactsByContactListID(contactListId)).willReturn(Collections.emptySet());
+
+        mockMvc.perform(get("/api/v1/contacts/contact-list/{id}", contactListId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isEmpty());
+    }
+    @Test
+    @DisplayName("Get All Contacts By User ID - GET /api/v1/contacts/user/{userId}")
+    public void givenUserId_whenGetAllContactsByUserId_thenReturnContacts() throws Exception {
+        UUID userId = UUID.randomUUID();
+        given(contactService.getAllContactsByUserId(userId)).willReturn(Set.of(contactDTO));
+
+        mockMvc.perform(get("/api/v1/contacts/user/{userId}", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].email").value(contactDTO.email()));
+    }
+
+    @Test
+    @DisplayName("Get All Contacts By User ID - GET /api/v1/contacts/user/{userId} - No Contacts Found")
+    public void givenUserId_whenGetAllContactsByUserId_thenReturnEmptySet() throws Exception {
+        UUID userId = UUID.randomUUID();
+        given(contactService.getAllContactsByUserId(userId)).willReturn(Collections.emptySet());
+
+        mockMvc.perform(get("/api/v1/contacts/user/{userId}", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isEmpty());
     }
 }

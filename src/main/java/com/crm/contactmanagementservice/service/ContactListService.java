@@ -26,6 +26,12 @@ public interface ContactListService {
     Set<ContactListDTO> getAllContactLists();
 
     /**
+     * Fetches all contact lists by userId.
+     * @return A Set of all ContactListDTO.
+     */
+    Set<ContactListDTO> getAllContactListsByUserId(UUID id);
+
+    /**
      * Creates a new contact list.
      * @param contactListDTO The ContactListDTO to create.
      * @return The created ContactListDTO.

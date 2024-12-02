@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,8 +36,8 @@ public class ContactListServiceImpl implements ContactListService {
     @Override
     public ContactListDTO getContactListById(UUID id) {
         log.info("Fetching contact list by id: {}", id);
-        return contactListMapper.toDTO(contactListRepository.findContactListEntitiesById(id)
-                .orElseThrow(() -> new RuntimeException("ContactList not found"))); // Customize exception as needed
+        return contactListMapper.toDTO(contactListRepository.findContactListEntityById(id)
+                .orElseThrow(() -> new RuntimeException("ContactList not found")));
     }
 
     /**
@@ -47,6 +48,18 @@ public class ContactListServiceImpl implements ContactListService {
     public Set<ContactListDTO> getAllContactLists() {
         log.info("Fetching all contact lists");
         return contactListRepository.findAll().stream()
+                .map(contactListMapper::toDTO)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Fetches all contact lists who share the same user id.
+     * @return A Set of all ContactListDTO.
+     */
+    @Override
+    public Set<ContactListDTO> getAllContactListsByUserId(UUID id) {
+        log.info("Fetching all contact lists by user id: {}", id);
+        return contactListRepository.findAllContactListsByUserId(id).stream()
                 .map(contactListMapper::toDTO)
                 .collect(Collectors.toSet());
     }

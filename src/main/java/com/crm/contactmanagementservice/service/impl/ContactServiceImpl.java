@@ -34,7 +34,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactDTO getContactById(UUID id) {
         log.info("Fetching contact by id: {}", id);
-        return contactMapper.toDTO(contactRepository.findContactEntitiesById(id)
+        return contactMapper.toDTO(contactRepository.findContactEntityById(id)
                 .orElseThrow(() -> new AppEntityNotFoundException("Contact not found")));
     }
 
@@ -47,7 +47,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactDTO getContactByEmail(String email) {
         log.info("Fetching contact by email: {}", email);
-        return contactMapper.toDTO(contactRepository.findContactEntitiesByEmail(email)
+        return contactMapper.toDTO(contactRepository.findContactEntityByEmail(email)
                 .orElseThrow(() -> new AppEntityNotFoundException("Contact not found")));
     }
 
@@ -60,7 +60,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactDTO getContactByPhone(String phone) {
         log.info("Fetching contact by phone: {}", phone);
-        return contactMapper.toDTO(contactRepository.findContactEntitiesByPhone(phone)
+        return contactMapper.toDTO(contactRepository.findContactEntityByPhone(phone)
                 .orElseThrow(() -> new AppEntityNotFoundException("Contact not found")));
     }
 
@@ -71,11 +71,48 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public Set<ContactDTO> getAllContacts() {
         log.info("Fetching all contacts");
-        return contactRepository.findAll().stream()
+        return contactRepository.findAllContactEntities().stream()
                 .map(contactMapper::toDTO)
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Fetches all contacts from a contact list by its ID.
+     * @param id The ID of the contact list.
+     * @return A Set of ContactDTO representing all contacts in the specified contact list.
+     */
+    @Override
+    public Set<ContactDTO> getAllContactsByContactListID(UUID id) {
+        log.info("Fetching all contacts by contact list ID: {}", id);
+        return contactRepository.findAllContactsByContactListId(id).stream()
+                .map(contactMapper::toDTO)
+                .collect(Collectors.toSet());
+    }
+    /**
+     * Fetches all contacts from a user ID.
+     * @param id The ID of the contact list.
+     * @return A Set of ContactDTO representing all contacts in the specified contact list.
+     */
+    @Override
+    public Set<ContactDTO> getAllContactsByUserId(UUID id) {
+        log.info("Fetching all contacts by user ID: {}", id);
+        return contactRepository.findAllContactsByUserId(id).stream()
+                .map(contactMapper::toDTO)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Fetches all contacts by a contact list ID.
+     * @param contactListId The ID of the contact list.
+     * @return A set of all contact DTOs in the contact list.
+     */
+    @Override
+    public Set<ContactDTO> getAllContactsByContactListId(UUID contactListId) {
+        log.info("Fetching all contacts by contact list ID: {}", contactListId);
+        return contactRepository.findAllContactsByContactListId(contactListId).stream()
+                .map(contactMapper::toDTO)
+                .collect(Collectors.toSet());
+    }
 
     /**
      * Creates a new contact.
@@ -99,7 +136,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactDTO updateContact(ContactDTO contactDTO, UUID id) {
         log.info("Updating contact with id: {}", id);
-        ContactEntity contactEntity = contactRepository.findContactEntitiesById(id)
+        ContactEntity contactEntity = contactRepository.findContactEntityById(id)
                 .orElseThrow(() -> new AppEntityNotFoundException("Contact not found with id: " + id));
 
         if(contactDTO.firstName() != null) {

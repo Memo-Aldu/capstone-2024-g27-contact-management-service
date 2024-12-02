@@ -2,6 +2,7 @@ package com.crm.contactmanagementservice.repository;
 
 import com.crm.contactmanagementservice.entity.ContactListEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +24,8 @@ public interface ContactListRepository extends JpaRepository<ContactListEntity, 
      * @param id The id of the contact list to find.
      * @return An Optional that may contain the found ContactListEntity.
      */
-    Optional<ContactListEntity> findContactListEntitiesById(@Param("id") UUID id);
+    @Query(value = "SELECT * FROM public.contact_list WHERE id = :id", nativeQuery = true)
+    Optional<ContactListEntity> findContactListEntityById(@Param("id") UUID id);
 
     /**
      * Custom query to find all contact lists by a user's id.
@@ -31,5 +33,6 @@ public interface ContactListRepository extends JpaRepository<ContactListEntity, 
      * @param userId The id of the user whose contact lists to find.
      * @return A Set of ContactListEntity that belong to the user.
      */
-    Set<ContactListEntity> findContactListEntitiesByUserId(@Param("userId") UUID userId);
+    @Query(value = "SELECT * FROM public.contact_list WHERE user_id = :userId", nativeQuery = true)
+    Set<ContactListEntity> findAllContactListsByUserId(@Param("userId") UUID userId);
 }
