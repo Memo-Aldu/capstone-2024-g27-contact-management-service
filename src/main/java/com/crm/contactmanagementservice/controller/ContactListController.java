@@ -1,12 +1,16 @@
 package com.crm.contactmanagementservice.controller;
 
+import org.springframework.web.bind.annotation.*;
 import com.crm.contactmanagementservice.dto.ContactListDTO;
 import com.crm.contactmanagementservice.service.ContactListService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,12 +20,12 @@ import java.util.UUID;
  * It uses the ContactListService to perform these operations.
  */
 @RestController
-@CrossOrigin("*")
-@RequestMapping("/api/v1/contactlists")
+@RequestMapping("/api/v1/contact_lists")
 @AllArgsConstructor
 public class ContactListController {
 
     private final ContactListService contactListService;
+    private final ObjectMapper objectMapper;
 
     /**
      * Fetches a contact list by its ID.
@@ -42,6 +46,15 @@ public class ContactListController {
         return ResponseEntity.ok(contactListService.getAllContactLists());
     }
 
+    /**
+     * Fetches all contact lists by the user id.
+     * @return A set of all contact list DTOs.
+     */
+    @GetMapping("user/{id}")
+    public ResponseEntity<Set<ContactListDTO>> getAllContactListsByUserID(@PathVariable UUID id) {
+        Set<ContactListDTO> contactLists = contactListService.getAllContactListsByUserId(id);
+        return ResponseEntity.ok(contactLists);
+    }
     /**
      * Creates a new contact list.
      * @param contactListDTO The contact list DTO to create.
@@ -73,5 +86,4 @@ public class ContactListController {
         contactListService.deleteContactListById(id);
         return ResponseEntity.noContent().build();
     }
-
 }

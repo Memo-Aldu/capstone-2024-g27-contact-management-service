@@ -6,20 +6,25 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+
 
 /**
  * REST controller for managing contacts.
  */
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/v1/contacts")
 @AllArgsConstructor
 public class ContactController {
 
     private final ContactService contactService;
+    private final ObjectMapper objectMapper;
 
     /**
      * Fetches a contact by its ID.
@@ -38,6 +43,25 @@ public class ContactController {
     @GetMapping
     public ResponseEntity<Set<ContactDTO>> getAllContacts() {
         return ResponseEntity.ok(contactService.getAllContacts());
+    }
+    /**
+     * Fetches all contacts from a contact list by its ID.
+     * @param id The ID of the contact list.
+     * @return A Set of ContactDTO representing all contacts in the specified contact list.
+     */
+    @GetMapping("/contact-list/{id}")
+    public ResponseEntity<Set<ContactDTO>> getAllContactsByContactListID(@PathVariable UUID id) {
+        return ResponseEntity.ok(contactService.getAllContactsByContactListID(id));
+    }
+    /**
+     * Fetches all contacts for a given user ID.
+     * @param userId The ID of the user whose contacts to fetch.
+     * @return A ResponseEntity containing a set of ContactDTO representing all contacts for the specified user.
+     */
+    @GetMapping("user/{userId}")
+    public ResponseEntity<Set<ContactDTO>> getAllContactsByUserId(@PathVariable UUID userId) {
+        Set<ContactDTO> contacts = contactService.getAllContactsByUserId(userId);
+        return ResponseEntity.ok(contacts);
     }
 
     /**

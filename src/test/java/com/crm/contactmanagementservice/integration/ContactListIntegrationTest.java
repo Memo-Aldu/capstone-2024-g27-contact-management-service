@@ -61,11 +61,11 @@ public class ContactListIntegrationTest {
      * The test passes if the HTTP status is OK and the returned ContactListDTO's list name matches the expected list name.
      */
     @Test
-    @DisplayName("Get ContactList By Id - GET /api/v1/contactlists/{id}")
+    @DisplayName("Get ContactList By Id - GET /api/v1/contact_lists/{id}")
     public void givenContactListId_whenGetContactListById_thenReturnContactList() throws Exception {
         given(contactListService.getContactListById(contactListDTO.id())).willReturn(contactListDTO);
 
-        mockMvc.perform(get("/api/v1/contactlists/{id}", contactListDTO.id()))
+        mockMvc.perform(get("/api/v1/contact_lists/{id}", contactListDTO.id()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.listName").value(contactListDTO.listName()));
@@ -76,11 +76,11 @@ public class ContactListIntegrationTest {
      * The test passes if the HTTP status is Created and the returned ContactListDTO's list name matches the expected list name.
      */
     @Test
-    @DisplayName("Create ContactList - POST /api/v1/contactlists")
+    @DisplayName("Create ContactList - POST /api/v1/contact_lists")
     public void givenContactListDTO_whenCreateContactList_thenReturnSavedContactList() throws Exception {
         given(contactListService.createContactList(contactListDTO)).willReturn(contactListDTO);
 
-        mockMvc.perform(post("/api/v1/contactlists")
+        mockMvc.perform(post("/api/v1/contact_lists")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(contactListDTO)))
                 .andExpect(status().isCreated())
@@ -93,11 +93,11 @@ public class ContactListIntegrationTest {
      * The test passes if the HTTP status is OK and the returned ContactListDTO's list name matches the expected list name.
      */
     @Test
-    @DisplayName("Update ContactList - PATCH /api/v1/contactlists/{id}")
+    @DisplayName("Update ContactList - PATCH /api/v1/contact_lists/{id}")
     public void givenUpdatedContactListDTO_whenUpdateContactList_thenReturnUpdatedContactList() throws Exception {
         given(contactListService.updateContactList(contactListDTO, contactListDTO.id())).willReturn(contactListDTO);
 
-        mockMvc.perform(patch("/api/v1/contactlists/{id}", contactListDTO.id())
+        mockMvc.perform(patch("/api/v1/contact_lists/{id}", contactListDTO.id())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(contactListDTO)))
                 .andExpect(status().isOk())
@@ -110,9 +110,9 @@ public class ContactListIntegrationTest {
      * The test passes if the HTTP status is No Content.
      */
     @Test
-    @DisplayName("Delete ContactList By Id - DELETE /api/v1/contactlists/{id}")
+    @DisplayName("Delete ContactList By Id - DELETE /api/v1/contact_lists/{id}")
     public void givenContactListId_whenDeleteContactListById_thenStatusNoContent() throws Exception {
-        mockMvc.perform(delete("/api/v1/contactlists/{id}", contactListDTO.id()))
+        mockMvc.perform(delete("/api/v1/contact_lists/{id}", contactListDTO.id()))
                 .andExpect(status().isNoContent());
     }
 
@@ -121,13 +121,47 @@ public class ContactListIntegrationTest {
      * The test passes if the HTTP status is OK and the returned ContactListDTO's list name matches the expected list name.
      */
     @Test
-    @DisplayName("Get All ContactLists - GET /api/v1/contactlists")
+    @DisplayName("Get All ContactLists - GET /api/v1/contact_lists")
     public void whenGetAllContactLists_thenReturnContactListsList() throws Exception {
         given(contactListService.getAllContactLists()).willReturn(Set.of(contactListDTO));
 
-        mockMvc.perform(get("/api/v1/contactlists"))
+        mockMvc.perform(get("/api/v1/contact_lists"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].listName").value(contactListDTO.listName()));
     }
+
+
+    /**
+     * Tests the getAllContactListsByUserId method of the ContactListController.
+     * The test passes if the HTTP status is OK and the returned ContactListDTO's list name matches the expected list name.
+     */
+    @Test
+    @DisplayName("Get All ContactLists By User Id - GET /api/v1/contact_lists/user/{id}")
+    public void givenUserId_whenGetAllContactListsByUserId_thenReturnContactLists() throws Exception {
+        UUID userId = UUID.randomUUID();
+        given(contactListService.getAllContactListsByUserId(userId)).willReturn(Set.of(contactListDTO));
+
+        mockMvc.perform(get("/api/v1/contact_lists/user/{id}", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].listName").value(contactListDTO.listName()));
+    }
+
+    /**
+     * Tests the getAllContactListsByUserId method of the ContactListController when no contact lists exist.
+     * The test passes if the HTTP status is OK and the returned list is empty.
+     */
+    @Test
+    @DisplayName("Get All ContactLists By User Id - GET /api/v1/contact_lists/user/{id} - No Contact Lists")
+    public void givenUserId_whenGetAllContactListsByUserId_andNoContactListsExist_thenReturnEmptyList() throws Exception {
+        UUID userId = UUID.randomUUID();
+        given(contactListService.getAllContactListsByUserId(userId)).willReturn(Set.of());
+
+        mockMvc.perform(get("/api/v1/contact_lists/user/{id}", userId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
 }

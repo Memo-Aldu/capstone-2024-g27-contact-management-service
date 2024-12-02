@@ -7,7 +7,10 @@ import com.crm.contactmanagementservice.repository.ContactListRepository;
 import com.crm.contactmanagementservice.entity.ContactListEntity;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Set;
 import java.util.UUID;
@@ -35,7 +38,7 @@ public class ContactListServiceImpl implements ContactListService {
     @Override
     public ContactListDTO getContactListById(UUID id) {
         log.info("Fetching contact list by id: {}", id);
-        return contactListMapper.toDTO(contactListRepository.findContactListEntitiesById(id)
+        return contactListMapper.toDTO(contactListRepository.findContactListEntityById(id)
                 .orElseThrow(() -> new RuntimeException("ContactList not found"))); // Customize exception as needed
     }
 
@@ -52,6 +55,18 @@ public class ContactListServiceImpl implements ContactListService {
     }
 
     /**
+     * Fetches all contact lists who share the same user id.
+     * @return A Set of all ContactListDTO.
+     */
+    @Override
+    public Set<ContactListDTO> getAllContactListsByUserId(UUID id) {
+        log.info("Fetching all contact lists by user id: {}", id);
+        return contactListRepository.findAllContactListsByUserId(id).stream()
+                .map(contactListMapper::toDTO)
+                .collect(Collectors.toSet());
+    }
+
+    /**
      * Creates a new contact list.
      * @param contactListDTO The ContactListDTO to create.
      * @return The created ContactListDTO.
@@ -62,6 +77,7 @@ public class ContactListServiceImpl implements ContactListService {
         ContactListEntity contactListEntity = contactListMapper.toEntity(contactListDTO);
         return contactListMapper.toDTO(contactListRepository.save(contactListEntity));
     }
+
 
     /**
      * Updates a contact list.

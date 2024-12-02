@@ -40,6 +40,24 @@ public interface ContactService {
      */
     Set<ContactDTO> getAllContacts();
 
+    /**
+     * Fetches all contacts from a contact list.
+     * @return A Set of all ContactDTO.
+     */
+    Set<ContactDTO> getAllContactsByContactListID(UUID id);
+
+    /**
+     * Fetches all contacts from a contact list.
+     * @return A Set of all ContactDTO.
+     */
+    Set<ContactDTO> getAllContactsByUserId(UUID id);
+
+    /**
+     * Fetches all contacts by a contact list's id.
+     * @param contactListId The id of the contact list whose contacts to fetch.
+     * @return A Set of ContactDTO that belong to the contact list.
+     */
+    Set<ContactDTO> getAllContactsByContactListId(UUID contactListId);
 
     /**
      * Creates a new contact.

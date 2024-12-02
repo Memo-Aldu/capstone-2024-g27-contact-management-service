@@ -1,8 +1,6 @@
 package com.crm.contactmanagementservice.repository;
 
 import com.crm.contactmanagementservice.entity.ContactEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,14 +27,36 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
      * @param id The id of the contact to find.
      * @return An Optional that may contain the found ContactEntity.
      */
-    Optional<ContactEntity> findContactEntitiesById(@Param("id") UUID id);
+    @Query(value = "SELECT * FROM public.contact c WHERE c.id = :id", nativeQuery = true)
+    Optional<ContactEntity> findContactEntityById(@Param("id") UUID id);
 
     /**
      * Custom query to find all contacts.
      * This query is executed natively, meaning it is written in SQL and not JPQL.
      * @return A Set of all ContactEntity.
      */
-    Page<ContactEntity> findAllBy(Pageable page);
+    @Query(value = "SELECT * FROM public.contact", nativeQuery = true)
+    Set<ContactEntity> findAllContactEntities();
+
+    /**
+     * Custom query to find all contacts by a contact list's id.
+     * This query is executed natively, meaning it is written in SQL and not JPQL.
+     * @param contactListId The id of the contact list whose contacts to find.
+     * @return A Set of ContactEntity that belong to the contact list.
+     */
+    @Query(value = "SELECT * FROM public.contact WHERE contact_list_id = :contactListId", nativeQuery = true)
+    Set<ContactEntity> findAllContactsByContactListId(@Param("contactListId") UUID contactListId);
+
+    /**
+     * Custom query to find all contacts for a given user ID.
+     * This query fetches all contact lists for the user and then lists all contacts from those contact lists.
+     * @param userId The ID of the user whose contacts to find.
+     * @return A Set of ContactEntity that belong to the user's contact lists.
+     */
+    @Query(value = "SELECT c.* FROM public.contact c " +
+            "JOIN public.contact_list cl ON c.contact_list_id = cl.id " +
+            "WHERE cl.user_id = :userId", nativeQuery = true)
+    Set<ContactEntity> findAllContactsByUserId(@Param("userId") UUID userId);
 
     /**
      * Custom query to find a contact by its email.
@@ -44,7 +64,8 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
      * @param email The email of the contact to find.
      * @return An Optional that may contain the found ContactEntity.
      */
-    Optional<ContactEntity> findContactEntitiesByEmail(@Param("email") String email);
+    @Query(value = "SELECT * FROM public.contact c WHERE c.contact_email = :email", nativeQuery = true)
+    Optional<ContactEntity> findContactEntityByEmail(@Param("email") String email);
 
     /**
      * Custom query to find a contact by its phone.
@@ -52,7 +73,8 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
      * @param phone The phone of the contact to find.
      * @return An Optional that may contain the found ContactEntity.
      */
-    Optional<ContactEntity> findContactEntitiesByPhone(@Param("phone") String phone);
+    @Query(value = "SELECT * FROM public.contact c WHERE c.contact_phone = :phone", nativeQuery = true)
+    Optional<ContactEntity> findContactEntityByPhone(@Param("phone") String phone);
 
     /**
      * Custom query to search for contacts by name.
@@ -75,4 +97,5 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
     @Query(value = "DELETE FROM public.contact c WHERE c.id = :id", nativeQuery = true)
     void deleteContactEntityById(@Param("id") UUID id);
 
+    /*public.*/
 }
