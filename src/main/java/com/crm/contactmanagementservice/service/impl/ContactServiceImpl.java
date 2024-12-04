@@ -157,9 +157,14 @@ public class ContactServiceImpl implements ContactService {
         if(contactDTO.fax() != null) {
             contactEntity.setFax(contactDTO.fax());
         }
-        contactEntity.setAddressId(contactDTO.addressId());
-        contactEntity.setDoNotContact(contactDTO.doNotContact());
+        if (contactDTO.addressId() != null) {
+            contactEntity.setAddressId(contactDTO.addressId());
 
+        }
+        if (contactDTO.contactListId() != null) {
+            contactRepository.setContactListId(contactDTO.contactListId(), id);
+        }
+        contactEntity.setDoNotContact(contactDTO.doNotContact());
         return contactMapper.toDTO(contactRepository.save(contactEntity));
     }
 
