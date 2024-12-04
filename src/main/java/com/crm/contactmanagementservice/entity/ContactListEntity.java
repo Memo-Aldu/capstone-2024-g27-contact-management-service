@@ -1,7 +1,6 @@
 package com.crm.contactmanagementservice.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +15,9 @@ import java.util.UUID;
 @Table(name = "contact_list")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ContactListEntity {
 
     /**
@@ -42,6 +44,6 @@ public class ContactListEntity {
      * The contacts that belong to the contact list.
      * This is a one-to-many relationship.
      */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "contactList", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "contactList", cascade = CascadeType.DETACH)
     private Set<ContactEntity> contacts = new HashSet<>();
 }

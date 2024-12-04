@@ -1,5 +1,6 @@
 package com.crm.contactmanagementservice.service.impl;
 
+import com.crm.contactmanagementservice.entity.ContactListEntity;
 import com.crm.contactmanagementservice.service.ContactService;
 import com.crm.contactmanagementservice.dto.ContactDTO;
 import com.crm.contactmanagementservice.entity.ContactEntity;
@@ -163,6 +164,10 @@ public class ContactServiceImpl implements ContactService {
         }
         if (contactDTO.contactListId() != null) {
             contactRepository.setContactListId(contactDTO.contactListId(), id);
+            contactEntity.setContactList(ContactListEntity.builder().id(contactDTO.contactListId()).build());
+        } else {
+            contactRepository.setContactListId(null, id);
+            contactEntity.setContactList(null);
         }
         contactEntity.setDoNotContact(contactDTO.doNotContact());
         return contactMapper.toDTO(contactRepository.save(contactEntity));

@@ -3,6 +3,7 @@ package com.crm.contactmanagementservice.mapper;
 import com.crm.contactmanagementservice.dto.ContactDTO;
 import com.crm.contactmanagementservice.entity.ContactEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -21,6 +22,7 @@ public interface ContactMapper {
      * @param entity The ContactEntity to convert.
      * @return The converted ContactDTO.
      */
+    @Mapping(target = "contactListId", source = "contactList.id")
     ContactDTO toDTO(ContactEntity entity);
 
     /**
@@ -28,6 +30,7 @@ public interface ContactMapper {
      * @param dto The ContactDTO to convert.
      * @return The converted ContactEntity.
      */
+    @Mapping(target = "contactList.id", source = "contactListId")
     ContactEntity toEntity(ContactDTO dto);
 
     /**
