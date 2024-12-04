@@ -99,6 +99,6 @@ public interface ContactRepository extends JpaRepository<ContactEntity, UUID> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE public.contact c SET c.contact_list_id = :contactListId WHERE c.id = :contactId", nativeQuery = true)
-    void setContactListId(UUID contactListId, UUID contactId);
+    @Query("UPDATE ContactEntity c SET c.contactList.id = :contactListId WHERE c.id = :contactId")
+    void setContactListId(@Param("contactListId") UUID contactListId, @Param("contactId") UUID contactId);
 }
