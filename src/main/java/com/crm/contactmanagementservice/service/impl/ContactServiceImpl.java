@@ -124,6 +124,9 @@ public class ContactServiceImpl implements ContactService {
     public ContactDTO createContact(ContactDTO contactDTO) {
         log.info("Creating new contact");
         ContactEntity contactEntity = contactMapper.toEntity(contactDTO);
+        if (contactDTO.contactListId() == null) {
+            contactEntity.setContactList(null);
+        }
         return contactMapper.toDTO(contactRepository.save(contactEntity));
     }
 
