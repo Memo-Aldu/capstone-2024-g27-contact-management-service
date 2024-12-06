@@ -9,6 +9,7 @@ The **Contact Management Service** is a RESTful API designed to manage contacts 
 - [Testing](#testing)
 - [Deployment](#deployment)
 - [Environment Variables](#environment-variables)
+- [Contact](#contact)
 
 
 ## Overview
@@ -115,3 +116,6 @@ For deploying the **Contact Management Service**:
 - **APP_HOST**: The host for the local application.
 
 Ensure to set the proper values for these variables in both development and production environments.
+
+## Contact
+For questions or support, please contact **Memo Aldujaili** at [maldu064@uottawa.ca](mailto:maldu064@uottawa.ca).
